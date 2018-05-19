@@ -34,7 +34,7 @@ public class DemoService {
         try {
             result.append("<br/>This Inet host: " + InetAddress.getLocalHost().getHostName());
         } catch (UnknownHostException e) {
-            result.append("<br/>This Inet host: Unknown");
+            result.append("<br/>This Inet host is Unknown");
         }
         result.append("<br/>This env HOSTNAME: " + System.getenv().getOrDefault("HOSTNAME", "Unknown"));
         result.append("<br/>Configured service delay in milliseconds: " + this.config.getServiceDelayMs());
