@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  hopje-demo-service:
+    container_name: hopje-demo-service
+    image: hopje-demo-service
+    ports:
+      - "8085:8085"
+    environment:
+      APPLICATION_SERVICE_DELAY_MS: 4000
+      

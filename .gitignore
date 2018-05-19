@@ -1,0 +1,13 @@
+target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+/bin/
+*.log
+log.txt
