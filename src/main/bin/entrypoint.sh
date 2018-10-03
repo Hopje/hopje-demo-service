@@ -19,7 +19,13 @@ sleep $waitBeforeStart
 if [[ -z "$APP_HOME" ]]; then
     export APP_HOME=/app.jar
 fi
-echo > /application.properties
+
+if [[ -z "$CONFIG_HOME" ]]; then
+    export CONFIG_HOME=/config
+fi
+
+mkdir $CONFIG_HOME
+echo >> $CONFIG_HOME/application.properties
 
 IFS=$'\n'
 for VAR in `env`
@@ -29,10 +35,10 @@ do
     application_name=`echo "$VAR" | sed -r "s/APPLICATION_([^=]*)=(.*)/\1/g" | tr '[:upper:]' '[:lower:]' | tr _ .`
     env_var=`echo "$VAR" | sed -r "s/([^=]*)=(.*)/\1/g"`
     env_value=`echo "$VAR" | sed -r "s/([^=]*)=(.*)/\2/g"`
-    if egrep -q "(^|^#)$application_name=" /application.properties; then
-        sed -r -i "s@(^|^#)($application_name)=(.*)@\2=${env_value}@g" /application.properties #note that no config values may contain an '@' char
+    if egrep -q "(^|^#)$application_name=" $CONFIG_HOME/application.properties; then
+        sed -r -i "s@(^|^#)($application_name)=(.*)@\2=${env_value}@g" $CONFIG_HOME/application.properties #note that no config values may contain an '@' char
     else
-        sed -r -i "\$a$application_name=${env_value}" /application.properties
+        sed -r -i "\$a$application_name=${env_value}" $CONFIG_HOME/application.properties
     fi
   fi
 done
@@ -59,7 +65,7 @@ term_handler() {
 
 # Capture kill requests to stop properly
 trap "term_handler" SIGHUP SIGINT SIGTERM
-java -cp /application.properties -jar $APP_HOME &
+java -cp $CONFIG_HOME/application.properties -jar $APP_HOME &
 APP_PID=$!
 
 wait "$APP_PID"
